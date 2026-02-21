@@ -1,0 +1,46 @@
+{% extends 'base.html.twig' %}
+{% block title %}Ajouter Employé{% endblock %}
+{% block page_title %}Utilisateurs{% endblock %}
+{% block page_subtitle %}Ajouter Employé{% endblock %}
+
+{% block body %}
+<div class="page">
+  <h1><i class="fas fa-user-plus"></i> Ajouter Employé</h1>
+
+  {% for message in app.flashes('success') %}
+    <div class="flash flash-success">{{ message }}</div>
+  {% endfor %}
+  {% for message in app.flashes('error') %}
+    <div class="flash flash-error">{{ message }}</div>
+  {% endfor %}
+
+  {{ form_start(form) }}
+    <div class="form-row">
+      {{ form_label(form.nom) }}
+      {{ form_widget(form.nom) }}
+      {{ form_errors(form.nom) }}
+    </div>
+
+    <div class="form-row">
+      {{ form_label(form.prenom) }}
+      {{ form_widget(form.prenom) }}
+      {{ form_errors(form.prenom) }}
+    </div>
+
+    <div class="form-row">
+      {{ form_label(form.email) }}
+      {{ form_widget(form.email) }}
+      {{ form_errors(form.email) }}
+    </div>
+
+    <div class="form-row">
+      {{ form_label(form.plainPassword) }}
+      {{ form_widget(form.plainPassword) }}
+      {{ form_errors(form.plainPassword) }}
+    </div>
+
+    <button class="btn"><i class="fas fa-check"></i> Enregistrer</button>
+    <a class="btn btn-light" href="{{ path('users_index') }}"><i class="fas fa-arrow-left"></i> Retour</a>
+  {{ form_end(form) }}
+</div>
+{% endblock %}

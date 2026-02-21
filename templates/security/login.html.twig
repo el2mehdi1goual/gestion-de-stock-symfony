@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Connexion Admin</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <link rel="stylesheet" href="{{ asset('styles/login.css') }}">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+  <div class="login-container">
+
+    <div class="login-header">
+      <div class="login-logo"><i class="fas fa-box"></i></div>
+      <div class="login-brand">
+        <strong>Gestion De Stock</strong>
+      </div>
+    </div>
+
+    <h1>Connexion Admin</h1>
+
+    <!-- ERREUR LOGIN  -->
+    {% if error %}
+      <div class="error">
+        {{ error.messageKey|trans(error.messageData, 'security') }}
+      </div>
+    {% endif %}
+
+    <!-- ===== FORMULAIRE ===== -->
+    <form action="{{ path('login') }}" method="post">
+
+  <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+
+  <label for="email">Email</label>
+  <input type="text" id="email" name="_username" value="{{ last_username }}" placeholder="admin@magasin.com" required autofocus>
+
+  <label for="password">Mot de passe</label>
+  <input type="password" id="password" name="_password" placeholder="••••••••" required>
+
+  <button type="submit">Se connecter</button>
+</form>
+
+
+  </div>
+
+</body>
+</html>

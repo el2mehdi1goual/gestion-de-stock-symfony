@@ -1,0 +1,26 @@
+﻿{% extends "base.html.twig" %}
+{% block title %}Home{% endblock %}
+{% block page_title %}Welcome{% endblock %}
+{% block page_subtitle %}Welcome to Stock Management System{% block %}
+
+{% block body %}
+<div class="panel">
+    <h2>Welcome</h2>
+    <p>This is a skeleton application ready for development.</p>
+    
+    {% if is_granted("ROLE_ADMIN") %}
+    <h3>Admin Panel</h3>
+    <ul>
+        <li><a href="{{ path("users_index") }}">Manage Users</a></li>
+        <li><a href="{{ path("users_new") }}">Create New User</a></li>
+    </ul>
+    {% endif %}
+    
+    <h3>Features</h3>
+    <ul>
+        <li>User Authentication & Authorization</li>
+        <li>Admin User Management</li>
+        <li>Base Layout & Navigation</li>
+    </ul>
+</div>
+{% endblock %}

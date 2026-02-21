@@ -1,0 +1,117 @@
+{% if app.user %}
+  <aside class="sidebar">
+    <div class="side-brand">
+      <div class="side-logo"><i class="fas fa-box"></i></div>
+      <div class="side-text">
+        <strong>Gestion de Stock</strong>
+        <span>by El mehdi & Ali</span>
+      </div>
+    </div>
+
+    <nav class="side-nav">
+      <!-- DASHBOARD --> 
+      <a class="side-link" href="{{ path('app_home') }}"><i class="fas fa-home"></i> Dashboard</a>
+      {% if is_granted('ROLE_ADMIN') %}
+        <!-- UTILISATEURS -->
+       <a class="side-link" href="{{ path('users_index') }}"><i class="fas fa-users"></i> Utilisateurs</a>
+      {% endif %} 
+      <!-- PRODUITS -->
+      <a class="side-link" href="{{ path('products') }}"><i class="fas fa-box"></i> Produits</a>
+{% if is_granted('ROLE_ADMIN') %}
+      <!-- FOURNISSEURS --> 
+      <a class="side-link" href="{{ path('suppliers') }}"><i class="fas fa-industry"></i> Fournisseurs</a>
+      {% endif %}
+      <!-- STOCK -->
+      <a class="side-link" href="{{ path('products', { mode: 'stock' }) }}"><i class="fas fa-exchange-alt"></i> Mouvements de Stock </a>
+      <!-- ALERTES -->
+      <a class="side-link" href="{{ path('alerts') }}"><i class="fas fa-exclamation-triangle"></i> Alertes</a>
+
+     
+
+    </nav>
+  </aside>
+{% endif %}
+
+<div class="main">
+  <header class="topbar">
+  <link rel="stylesheet" href="{{ asset('styles/app.css') }}">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <div class="top-left">
+      <div class="top-title">
+        {% block page_title %}Dashboard{% endblock %}
+      </div>
+      <div class="top-sub">
+        {% block page_subtitle %}{% endblock %}
+      </div>
+    </div>
+
+    <div class="top-right">
+      {% if app.user %}
+        <div class="user-pill">
+          <span class="user-dot"></span>
+          {{ app.user.email }}
+        </div>
+        <a class="btn-ghost" href="{{ path('logout') }}">Déconnexion</a>
+      {% endif %}
+    </div>
+  </header>
+
+  <main class="content">
+    {% block body %}{% endblock %}
+  </main>
+
+  <div id="confirm-modal" class="modal-overlay" hidden>
+    <div class="modal">
+      <h3>Confirmer la suppression</h3>
+      <p data-modal-message>Confirmer la suppression ?</p>
+      <div class="modal-actions">
+        <button type="button" class="btn btn-light" data-modal-cancel>Annuler</button>
+        <button type="button" class="btn btn-danger" data-modal-confirm>Supprimer</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  const overlay = document.getElementById('confirm-modal');
+  if(!overlay) return;
+  const messageEl = overlay.querySelector('[data-modal-message]');
+  const cancelBtn = overlay.querySelector('[data-modal-cancel]');
+  const confirmBtn = overlay.querySelector('[data-modal-confirm]');
+  let pendingForm = null;
+
+  const openModal = (form) => {
+    pendingForm = form;
+    const msg = form.dataset.confirmMessage || 'Confirmer la suppression ?';
+    messageEl.textContent = msg;
+    overlay.hidden = false;
+    requestAnimationFrame(() => overlay.classList.add('open'));
+    confirmBtn.focus();
+  };
+
+  const closeModal = () => {
+    overlay.classList.remove('open');
+    setTimeout(() => { overlay.hidden = true; }, 150);
+    pendingForm = null;
+  };
+
+  document.querySelectorAll('form.js-delete-form').forEach((form) => {
+    form.addEventListener('submit', (e) => {
+      if (form.dataset.confirmed === 'true') return;
+      e.preventDefault();
+      openModal(form);
+    });
+  });
+
+  cancelBtn.addEventListener('click', closeModal);
+  overlay.addEventListener('click', (e) => { if (e.target === overlay) closeModal(); });
+  confirmBtn.addEventListener('click', () => {
+    if (!pendingForm) return;
+    pendingForm.dataset.confirmed = 'true';
+    pendingForm.requestSubmit();
+    closeModal();
+  });
+})();
+</script>
